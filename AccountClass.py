@@ -201,8 +201,8 @@ class DetailData:
             elif self.pl.main_parse(fact=fact,account_standard=coreData.AccountingStandardsDEI,isConsolidated=coreData.WhetherConsolidatedFinancialStatementsArePreparedDEI):pass
             elif self.cf.main_parse(fact=fact,account_standard=coreData.AccountingStandardsDEI,isConsolidated=coreData.WhetherConsolidatedFinancialStatementsArePreparedDEI):pass
             elif self.other.main_parse(fact=fact):pass
-            elif self.fs_html.main_parse(fact=fact,account_standard=coreData.AccountingStandardsDEI,isConsolidated=coreData.WhetherConsolidatedFinancialStatementsArePreparedDEI):pass
-            elif self.company_html.main_parse(fact=fact):pass
+            #elif self.fs_html.main_parse(fact=fact,account_standard=coreData.AccountingStandardsDEI,isConsolidated=coreData.WhetherConsolidatedFinancialStatementsArePreparedDEI):pass
+            #elif self.company_html.main_parse(fact=fact):pass
             else:pass
         self.did_finish_parse(core=coreData)
         self.add_option_data(coreData=coreData)
@@ -258,7 +258,7 @@ class BS:
         """一株当たり純資産"""
     
     def did_finish_parse(self,core:CoreData):
-        if core.AccountingStandardsDEI != AccountingStandardClass.japan_gaap:
+        if core.AccountingStandardsDEI != AccountingStandardClass.japan_gaap.value:
             return
         
         contractAssets = 0
@@ -1532,6 +1532,12 @@ class FinIndex:
             netProfit = detail.pl.profitLossAttributableToOwnersOfParent
         else:
             netProfit = detail.pl.profitLoss
+        
+        interestBearingDebt = 0
+        if detail.bs.interestBearingDebt != None:
+            interestBearingDebt = detail.bs.interestBearingDebt
+
+
         try:
             self.currentRatio = detail.bs.currentAssets / detail.bs.currentLiabilities
         except:pass 
@@ -1548,16 +1554,16 @@ class FinIndex:
             self.equityRatio = equity / detail.bs.assets
         except:pass 
         try:
-            self.debtEquityRatio = detail.bs.interestBearingDebt / equity
+            self.debtEquityRatio = interestBearingDebt / equity
         except:pass 
         try:
-            self.netDebt = detail.bs.interestBearingDebt - detail.cf.cashAndCashEquivalents
+            self.netDebt = interestBearingDebt - detail.cf.cashAndCashEquivalents
         except:pass 
         try:
             self.netDebtEquityRation = self.netDebt / equity
         except:pass 
         try:
-            self.dependedDebtRatio = detail.bs.interestBearingDebt / detail.bs.assets
+            self.dependedDebtRatio = interestBearingDebt / detail.bs.assets
         except:pass
         try:
             self.grossProfitMargin = detail.pl.grossProfit / netSales
@@ -1584,7 +1590,7 @@ class FinIndex:
             self.effectiveTaxRate = 1 - (detail.pl.profitLoss / detail.pl.incomeBeforeIncomeTaxes)
         except:pass
         try:
-            self.ROIC = (operatingIncome - detail.pl.incomeTaxes) / (detail.bs.interestBearingDebt + equity)
+            self.ROIC = (operatingIncome - detail.pl.incomeTaxes) / (interestBearingDebt + equity)
         except:pass
         try:
             self.ROE = netProfit / equity
@@ -1621,7 +1627,7 @@ class FinIndex:
             self.operatingCFCurrentLiabilitiesRatio = detail.cf.netCashProvidedByUsedInOperatingActivities / detail.bs.currentLiabilities
         except:pass
         try:
-            self.operatingCFDebtRatio = detail.bs.interestBearingDebt / detail.cf.netCashProvidedByUsedInOperatingActivities
+            self.operatingCFDebtRatio = interestBearingDebt / detail.cf.netCashProvidedByUsedInOperatingActivities
         except:pass
         try:
             self.fixedInvestmentOperatingCFRatio = detail.cf.netCashProvidedByUsedInOperatingActivities / detail.other.capitalExpendituresOverviewOfCapitalExpendituresEtc
@@ -1713,7 +1719,7 @@ class SaveCompanyDataToFireStore:
         self.save_data(path=self.plPath,dict_data=detailData.pl.__dict__)
         self.save_data(path=self.cfPath,dict_data=detailData.cf.__dict__)
         self.save_data(path=self.otherPath,dict_data=detailData.other.__dict__)
-        self.save_data(path=self.fsHTMLPath,dict_data=detailData.fs_html.__dict__)
+        #self.save_data(path=self.fsHTMLPath,dict_data=detailData.fs_html.__dict__)
         #self.save_data(path=self.companyHTMLPath,dict_data=detailData.company_html.__dict__)
         self.save_data(path=self.finIndexPath,dict_data=fin_index.__dict__)
     
