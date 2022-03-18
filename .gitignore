@@ -1,0 +1,13 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#各種参考資料
+*.xlsx
+*.xls
+*.csv
+*.pdf
+
+#重要プライベート書類
+corporateanalysishubapp-firebase-adminsdk-n8sd4-07e702dbc7.json
