@@ -1606,10 +1606,16 @@ class FinIndex:
             self.receivablesTurnover = netSales / detail.bs.notesAndAccountsReceivableTrade
         except:pass
         try:
-            self.inventoryTurnover = (netSales - detail.pl.grossProfit) / detail.bs.inventories
+            if detail.pl.grossProfit == None:
+                self.inventoryTurnover = netSales / detail.bs.inventories
+            else:
+                self.inventoryTurnover = (netSales - detail.pl.grossProfit) / detail.bs.inventories
         except:pass
         try:
-            self.payableTurnover = (netSales - detail.pl.grossProfit) / detail.bs.notesAndAccountsPayableTrade
+            if detail.pl.grossProfit == None:
+                self.payableTurnover = netSales / detail.bs.notesAndAccountsPayableTrade
+            else:
+                self.payableTurnover = (netSales - detail.pl.grossProfit) / detail.bs.notesAndAccountsPayableTrade
         except:pass
         try:
             self.tangibleFixedAssetTurnover = netSales / detail.bs.propertyPlantAndEquipment
@@ -1713,12 +1719,12 @@ class SaveCompanyDataToFireStore:
         path.set(dict_data,merge=True)
 
     def save_company_data(self,coreData:CoreData,detailData:DetailData,fin_index:FinIndex,formCode):
-        self.p_save_company_core_data(coreData=coreData)
-        self.p_save_fin_core_data(coreData=coreData,formCode=formCode)
+        #self.p_save_company_core_data(coreData=coreData)
+        #self.p_save_fin_core_data(coreData=coreData,formCode=formCode)
         self.save_data(path=self.bsPath,dict_data=detailData.bs.__dict__)
-        self.save_data(path=self.plPath,dict_data=detailData.pl.__dict__)
-        self.save_data(path=self.cfPath,dict_data=detailData.cf.__dict__)
-        self.save_data(path=self.otherPath,dict_data=detailData.other.__dict__)
+        #self.save_data(path=self.plPath,dict_data=detailData.pl.__dict__)
+        #self.save_data(path=self.cfPath,dict_data=detailData.cf.__dict__)
+        #self.save_data(path=self.otherPath,dict_data=detailData.other.__dict__)
         #self.save_data(path=self.fsHTMLPath,dict_data=detailData.fs_html.__dict__)
         #self.save_data(path=self.companyHTMLPath,dict_data=detailData.company_html.__dict__)
         self.save_data(path=self.finIndexPath,dict_data=fin_index.__dict__)
