@@ -661,10 +661,9 @@ class BS:
         """負債"""
         TotalCurrentLiabilitiesIFRS = auto()
         """流動負債"""
-
-        TradeAndOtherPayablesNCLIFRS = auto()
+        TradeAndOtherPayablesCLIFRS = auto()
         """仕入債務等"""
-        TradeAndOtherPayables2NCLIFRS = auto()
+        TradeAndOtherPayables2CLIFRS = auto()
         """仕入債務等"""
         TradeAndOtherPayables3CLIFRS = auto()
 

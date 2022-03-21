@@ -171,7 +171,7 @@ class FetchXBRLFileClass:
         ################
         if parameter.start_date == None or parameter.end_date == None:
             e_date = datetime.date.today()
-            s_date = datetime.date(year=e_date.year - 1,month=e_date.month,day=e_date.day)
+            s_date = datetime.date(year=e_date.year - 5,month=e_date.month,day=e_date.day)
         ################
         result = self.ResultData()
         path = "G:XBRL_For_Python_Parse////"
