@@ -129,7 +129,7 @@ class FetchXBRLFileClass:
         finish_count = len(docList) - 1
         for index, docID in enumerate(docList):
             url = self.edinetApiDocumentEndpoint_private(docID)
-            filename = "D://XBRL_Download//" + docID + ".zip"
+            filename = "G:XBRL_For_Python_Parse//" + docID + ".zip"
             res = requests.get(url)
             if res.status_code == 200:
                 with open(filename,"wb") as file:
@@ -171,10 +171,10 @@ class FetchXBRLFileClass:
         ################
         if parameter.start_date == None or parameter.end_date == None:
             e_date = datetime.date.today()
-            s_date = datetime.date(year=e_date.year - 5,month=e_date.month,day=e_date.day)
+            s_date = datetime.date(year=e_date.year - 1,month=e_date.month,day=e_date.day)
         ################
         result = self.ResultData()
-        path = "D:XBRL_Download//"
+        path = "G:XBRL_For_Python_Parse////"
         if parameter.mode == 0:
             files = os.listdir(path)
             dir = [f for f in files if os.path.isdir(os.path.join(path, f))]
