@@ -174,10 +174,15 @@ class CoreData:
         return tdate
     
     def p_create_simpleCompanyNameInJP(self):
-        self.simpleCompanyNameInJP = str(self.FilerNameInJapaneseDEI).replace(" ","")#半角スペースなくす
-        self.simpleCompanyNameInJP = self.simpleCompanyNameInJP.replace("　","")#全角スペースなくす
-        self.simpleCompanyNameInJP = self.simpleCompanyNameInJP.replace("株式会社","")#「株式会社」なくす
-        self.simpleCompanyNameInJP = jaconv.h2z(text=self.simpleCompanyNameInJP,ascii=True,digit=True)
+        self.simpleCompanyNameInJP = self.create_simpleCompanyNameInJP(companyName=self.FilerNameInJapaneseDEI)
+    
+    def create_simpleCompanyNameInJP(self,companyName:str) -> str:
+        tempName = companyName.replace(" ","")#半角スペースなくす
+        tempName = tempName.replace("　","")#全角スペースなくす
+        tempName = tempName.replace("・","")#「・」なくす
+        tempName = tempName.replace("株式会社","")#「株式会社」なくす
+        tempName = jaconv.h2z(text=tempName,ascii=True,digit=True)
+        return tempName
 
 class DetailData:
     bs = None
@@ -484,7 +489,7 @@ class BS:
             self.liabilities  = int(fact.value)
         elif name == e.TotalCurrentLiabilitiesIFRS.name:
             self.currentLiabilities = int(fact.value)
-        elif name == e.TradeAndOtherPayablesNCLIFRS.name or name == e.TradeAndOtherPayables2NCLIFRS.name or name == e.TradeAndOtherPayables3CLIFRS.name:
+        elif name == e.TradeAndOtherPayablesCLIFRS.name or name == e.TradeAndOtherPayables2CLIFRS.name or name == e.TradeAndOtherPayables3CLIFRS.name:
             self.notesAndAccountsPayableTrade = int(fact.value)
         elif name == e.NonCurrentLabilitiesIFRS.name:
             self.noncurrentLiabilities = int(fact.value)
@@ -1663,7 +1668,7 @@ class FinIndex:
         return result
 
     def p_check_operatingIncome(self,core:CoreData,detail:DetailData):
-        if core.AccountingStandardsDEI == AccountingStandardClass.ifrs:
+        if core.AccountingStandardsDEI == AccountingStandardClass.ifrs.value:
             if detail.pl.operatingIncomeIFRS != None:
                 return detail.pl.operatingIncomeIFRS
             else:
@@ -1721,7 +1726,7 @@ class SaveCompanyDataToFireStore:
         #self.p_save_company_core_data(coreData=coreData)
         #self.p_save_fin_core_data(coreData=coreData,formCode=formCode)
         self.save_data(path=self.bsPath,dict_data=detailData.bs.__dict__)
-        #self.save_data(path=self.plPath,dict_data=detailData.pl.__dict__)
+        self.save_data(path=self.plPath,dict_data=detailData.pl.__dict__)
         #self.save_data(path=self.cfPath,dict_data=detailData.cf.__dict__)
         #self.save_data(path=self.otherPath,dict_data=detailData.other.__dict__)
         #self.save_data(path=self.fsHTMLPath,dict_data=detailData.fs_html.__dict__)
