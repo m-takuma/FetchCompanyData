@@ -36,10 +36,10 @@ if __name__ == "__main__":
     #################
     #################
     fetch_xbrl_file = FetchXBRLFileClass()
-    mode = 1
+    mode = 0
     #0 => パソコン : 1 => API
-    s_date = None#datetime.date(2017,1,1)
-    e_date = None#datetime.date(2017,1,1)
+    s_date = datetime.date(2022,3,1)
+    e_date = datetime.date(2022,4,10)
 
     seccodes = secCode_enc(secCode_list=secCodes.Mothers)
     #print(len(secCodes))
@@ -83,12 +83,12 @@ if __name__ == "__main__":
             finCorePath = companyCorePath.collection(u'FinDoc').document(folder_name)
             bsPath = finCorePath.collection(u'FinData').document(u'BS')
             plPath = finCorePath.collection(u'FinData').document(u'PL')
-            #cfPath = finCorePath.collection(u'FinData').document(u'CF')
-            #otherPath = finCorePath.collection(u'FinData').document(u'Other')
+            cfPath = finCorePath.collection(u'FinData').document(u'CF')
+            otherPath = finCorePath.collection(u'FinData').document(u'Other')
             finIndexPath = finCorePath.collection(u'FinData').document(u'FinIndexPath')
             #fsHTMLPath = htmlPath.document(u'FS')
             #companyHTMLPath = htmlPath.document(u'CompanyInfo')
-            saveCompanyDataToFireStore = SaveCompanyDataToFireStore(companyCorePath,finCorePath,bsPath,plPath,"cfPath","otherPath","fsHTMLPath","companyHTMLPath",finIndexPath)
+            saveCompanyDataToFireStore = SaveCompanyDataToFireStore(companyCorePath,finCorePath,bsPath,plPath,cfPath,otherPath,"fsHTMLPath","companyHTMLPath",finIndexPath)
             saveCompanyDataToFireStore.save_company_data(coreData,detailData,finIndexData,formCode.value)
         try:
             pass
